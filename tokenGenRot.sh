@@ -9,7 +9,7 @@ NEW_TOKEN=$(node -e "console.log(require('uuid').v4())")
 # Función para actualizar la variable de entorno en una instancia de Render
 update_render_env_var() {
     local service_id=$1
-    local response=$(curl -X PATCH \
+    curl -X PATCH \
          "https://api.render.com/v1/services/${service_id}/env-vars" \
          -H "Authorization: Bearer ${RENDER_API_KEY}" \
          -H "Content-Type: application/json" \
@@ -19,19 +19,14 @@ update_render_env_var() {
                  "value": "'${NEW_TOKEN}'",
                  "scope": "deploy"
                }
-             ]')
-    
-    if [ $? -ne 0 ]; then
-        echo "Error updating Render environment variable for service $service_id: $response"
-    else
-        echo "Render environment variable updated successfully for service $service_id"
-    fi
+             ]'
 }
 
 # Función para actualizar la variable de entorno en Vercel
 update_vercel_env_var() {
+    local project_id=$1
     node -e "const axios = require('axios');
-    axios.patch('https://api.vercel.com/v12/projects/${VERCEL_PROJECT_ID}/env',
+    axios.patch('https://api.vercel.com/v12/projects/${project_id}/env',
         {
             type: 'encrypted',
             key: 'API_TOKEN',
@@ -61,4 +56,4 @@ update_render_env_var "$RENDER_CRON_JOB_SERVICE_ID"
 
 # Actualizar la variable de entorno en Vercel
 echo "Actualizando API_TOKEN en Vercel..."
-update_vercel_env_var
+update_vercel_env_var "your-vercel-project-id" # Reemplaza con el ID real de tu proyecto en Vercel
