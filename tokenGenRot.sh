@@ -9,17 +9,14 @@ NEW_TOKEN=$(node -e "console.log(require('uuid').v4())")
 # Función para actualizar la variable de entorno en una instancia de Render
 update_render_env_var() {
     local service_id=$1
-    curl -X PATCH \
-         "https://api.render.com/v1/services/${service_id}/env-vars" \
-         -H "Authorization: Bearer ${RENDER_API_KEY}" \
-         -H "Content-Type: application/json" \
-         -d '[
-               {
-                 "key": "API_TOKEN",
-                 "value": "'${NEW_TOKEN}'",
-                 "scope": "deploy"
-               }
-             ]'
+    curl --request PUT \
+         --url "https://api.render.com/v1/services/${service_id}/env-vars/API_TOKEN" \
+         -H 'accept: application/json' \
+         -H "authorization: Bearer ${RENDER_API_KEY}" \
+         -H 'content-type: application/json' \
+         --data '{
+           "value": "'${NEW_TOKEN}'"
+         }'
 }
 
 # Actualizar la variable de entorno en la instancia principal de Render
