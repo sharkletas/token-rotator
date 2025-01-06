@@ -1,17 +1,19 @@
 const axios = require('axios');
 require('dotenv').config();
 
+// Cambiamos el nombre de la variable para el backend
 const RENDER_API_KEY = process.env.RENDER_API_KEY;
-const RENDER_SERVICE_ID = process.env.RENDER_SERVICE_ID;
+const BACKEND_SERVICE_ID = process.env.BACKEND_SERVICE_ID; // Nueva variable para el backend
 const { v4: uuidv4 } = require('uuid');
 
 const NEW_TOKEN = uuidv4();
-const API_URL = `https://api.render.com/v1/services/${RENDER_SERVICE_ID}/env-vars/API_TOKEN`;
+// Actualizamos la URL para usar BACKEND_SERVICE_ID
+const API_URL = `https://api.render.com/v1/services/${BACKEND_SERVICE_ID}/env-vars/API_TOKEN`;
 
 async function updateRenderEnvVar() {
   console.log('Comenzando la actualización de la variable de entorno...');
   console.log('RENDER_API_KEY:', RENDER_API_KEY ? 'está configurada' : 'no está configurada');
-  console.log('RENDER_SERVICE_ID:', RENDER_SERVICE_ID);
+  console.log('BACKEND_SERVICE_ID:', BACKEND_SERVICE_ID);
   console.log('Nuevo Token generado:', NEW_TOKEN);
   console.log('URL de la Solicitud:', API_URL);
 
