@@ -9,6 +9,12 @@ const NEW_TOKEN = uuidv4();
 const API_URL = `https://api.render.com/v1/services/${RENDER_SERVICE_ID}/env-vars/API_TOKEN`;
 
 async function updateRenderEnvVar() {
+  console.log('Comenzando la actualización de la variable de entorno...');
+  console.log('RENDER_API_KEY:', RENDER_API_KEY ? 'está configurada' : 'no está configurada');
+  console.log('RENDER_SERVICE_ID:', RENDER_SERVICE_ID);
+  console.log('Nuevo Token generado:', NEW_TOKEN);
+  console.log('URL de la Solicitud:', API_URL);
+
   try {
     const response = await axios.put(API_URL, {
       value: NEW_TOKEN
@@ -20,9 +26,19 @@ async function updateRenderEnvVar() {
       }
     });
 
-    console.log('Variable de entorno API_TOKEN actualizada:', response.data);
+    console.log('Respuesta de la solicitud HTTP:', JSON.stringify(response.data, null, 2));
+    console.log('Variable de entorno API_TOKEN actualizada con éxito.');
   } catch (error) {
-    console.error('Error al actualizar la variable de entorno:', error.response ? error.response.data : error.message);
+    console.error('Error al actualizar la variable de entorno:');
+    if (error.response) {
+      console.error('Código de estado:', error.response.status);
+      console.error('Datos de la respuesta:', JSON.stringify(error.response.data, null, 2));
+    } else if (error.request) {
+      console.error('La solicitud fue hecha pero no se recibió respuesta:', error.request);
+    } else {
+      console.error('Error:', error.message);
+    }
+    console.error('Configuración de la solicitud:', JSON.stringify(error.config, null, 2));
   }
 }
 
